@@ -1,0 +1,4 @@
+Lab2/dataset/*
+Lab2/saved_models/*
+!Lab2/dataset/.gitkeep
+!:ab2/saved_models/.gitkeep
