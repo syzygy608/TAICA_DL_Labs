@@ -3,4 +3,5 @@ Lab2/saved_models/*
 !Lab2/dataset/.gitkeep
 !Lab2/saved_models/.gitkeep
 test/*
+.venv/*
 .vscode/*
