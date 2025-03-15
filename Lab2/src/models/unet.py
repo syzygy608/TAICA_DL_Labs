@@ -1,3 +1,6 @@
-# Implement your UNet model here
+import torch
+import torch.nn as nn
 
-assert False, "Not implemented yet!"
+class UNet(nn.Module):
+    def __init__(self, in_channels, out_channels):
+        super(UNet, self).__init__()

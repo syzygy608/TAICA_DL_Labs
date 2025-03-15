@@ -1,8 +1,10 @@
 import argparse
+from oxford_pet import load_dataset
 
 def train(args):
-    # implement the training function here
-    
+    # implement the training function
+    dataloader = load_dataset(args.data_path, "train")
+
     assert False, "Not implemented yet!"
 
 def get_args():
@@ -16,3 +18,4 @@ def get_args():
  
 if __name__ == "__main__":
     args = get_args()
+    train(args)
