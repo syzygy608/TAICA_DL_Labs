@@ -130,6 +130,14 @@ def extract_archive(filepath):
 
 def load_dataset(data_path, mode):
     # implement the load dataset function here
+
+    # check if the dataset folder has images and annotations
+    images_path = os.path.join(data_path, "images")
+    annotations_path = os.path.join(data_path, "annotations")
+    if not os.path.exists(images_path) or not os.path.exists(annotations_path):
+        OxfordPetDataset.download(data_path)
+
+    # load the dataset
     dataset = OxfordPetDataset(root=data_path, mode=mode) if mode != "test" else SimpleOxfordPetDataset(root=data_path, mode=mode)
     dataloader = torch.utils.data.DataLoader(dataset, batch_size=32, shuffle=(mode == "train"))
     return dataloader
