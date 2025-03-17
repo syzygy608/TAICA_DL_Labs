@@ -18,6 +18,8 @@ def dice_score(pred_mask, gt_mask):
     if not isinstance(gt_mask, torch.Tensor):
         gt_mask = torch.tensor(gt_mask, dtype=torch.float32)
 
+    # sigmoid 函數將輸出值轉為機率值
+    pred_mask = torch.sigmoid(pred_mask)
     # 計算交集 (intersection)
     intersection = torch.sum(pred_mask * gt_mask)
     
@@ -30,3 +32,20 @@ def dice_score(pred_mask, gt_mask):
     # 轉成 numpy array
     dice_score = dice_score.cpu().numpy()
     return dice_score
+
+def dice_loss(pred_mask, gt_mask):
+    """
+    Calculate Dice loss between predicted mask and ground truth mask.
+    
+    Args:
+        pred_mask (torch.Tensor): Predicted mask (binary or probabilities)
+        gt_mask (torch.Tensor): Ground truth mask (binary)
+    
+    Returns:
+        torch.Tensor: Dice loss as a scalar tensor
+    """
+    # 計算 Dice Score
+    score = dice_score(pred_mask, gt_mask)
+    # 將 Dice Score 轉成 Dice Loss
+    dice_loss = 1 - score
+    return dice_loss

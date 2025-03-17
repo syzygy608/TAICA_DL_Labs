@@ -5,7 +5,7 @@ from torch.utils.tensorboard import SummaryWriter
 from models.unet import UNet
 # from models.resnet_unet import ResNetUNet
 import tqdm
-from utils import dice_score
+from utils import dice_score, dice_loss
 from evaluate import evaluate
 import torch
 import numpy as np
@@ -30,13 +30,13 @@ def train(args):
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate, weight_decay=args.weight_decay)
     # 在優化器時新增 L2 正則化項
 
-    # 使用 MSE Loss 作為損失函數
-    criterion = nn.MSELoss()
+    # 使用 BCELoss 作為損失函數
+    criterion = nn.BCEWithLogitsLoss()
 
     writer = SummaryWriter()
     
     best_score = 0
-    best_model_path = "../save_models/" + args.model + '_best_model.pth'
+    best_model_path = "../saved_models/" + args.model + '_best_model.pth'
 
     for epoch in range(args.epochs):
         train_loss = []
@@ -48,7 +48,7 @@ def train(args):
             masks = batch['mask'].to(device)
 
             predictions = model(images) # 取得模型預測結果
-            loss = criterion(predictions, masks) # 計算損失
+            loss = 0.5 * criterion(predictions, masks) + 0.5 * (dice_loss(predictions, masks)) # 計算損失值
             train_loss.append(loss.item()) # 將損失值加入 train_loss 中
             optimizer.zero_grad() # 梯度歸零
             loss.backward() # 反向傳播
@@ -74,9 +74,9 @@ def get_args():
     parser.add_argument('--data_path', type=str, default="../dataset", help='path of the input data')
     parser.add_argument('--epochs', '-e', type=int, default=5, help='number of epochs')
     parser.add_argument('--batch_size', '-b', type=int, default=1, help='batch size')
-    parser.add_argument('--learning-rate', '-lr', type=float, default=1e-5, help='learning rate')
+    parser.add_argument('--learning-rate', '-lr', type=float, default=1e-3, help='learning rate')
     parser.add_argument('--model', '-m', type=str, choices=['unet', 'resnet'], default='unet', help='model to use')
-    parser.add_argument('--weight-decay', '-wd', type=float, default=1e-4, help='weight decay')
+    parser.add_argument('--weight-decay', '-wd', type=float, default=1e-3, help='weight decay')
 
     return parser.parse_args()
  

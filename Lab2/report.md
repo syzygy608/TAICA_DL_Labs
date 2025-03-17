@@ -9,7 +9,7 @@ Both Unet model and resnet34+unet model need a convolution block. The convolutio
 
 #### Model Training
 
-I learned L2 regularization from [here](https://www.bilibili.com/video/BV1RqXRYDEe2/?share_source=copy_web&vd_source=8eb0208b6e349b456c095c16067fb3af). I added L2 regularization to calculate the loss. I also added a learning rate scheduler to adjust the learning rate during training. I used the Adam optimizer to optimize the model.
+I learned dropout and L2 regularization from [here](https://www.bilibili.com/video/BV1RqXRYDEe2/?share_source=copy_web&vd_source=8eb0208b6e349b456c095c16067fb3af). I added dropout to the conv block and L2 regularization to calculate the loss. I also added a learning rate scheduler to adjust the learning rate during training. I used the Adam optimizer to optimize the model.
 
 ### 2. Data Preprocessing (25%)
 
