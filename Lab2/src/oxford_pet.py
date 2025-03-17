@@ -139,12 +139,15 @@ def load_dataset(data_path, mode):
         OxfordPetDataset.download(data_path)
 
     # 將影像資料轉換成 tensor，並統一尺寸，訓練集增加多種轉換
-    if mode == "train" or mode == "val":
+    if mode == "train" or mode == "valid":
         transform = A.Compose([
             A.Resize(512, 512),
-            A.HorizontalFlip(p=0.5),
-            A.RandomBrightnessContrast(p=0.2),
-            A.ShiftScaleRotate(p=0.2),
+            A.Affine(
+                translate_percent={"x": (-0.1, 0.1), "y": (-0.1, 0.1)},
+                scale=(0.8, 1.2),
+                rotate=(-30, 30),
+                p=0.5
+            ),
             A.Normalize(),
             ToTensorV2(),
             
