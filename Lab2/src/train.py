@@ -35,7 +35,7 @@ def train(args):
 
     writer = SummaryWriter()
     
-    best_score = 0
+    best_score = 0.8
     best_model_path = "../saved_models/" + args.model + '_best_model.pth'
 
     for epoch in range(args.epochs):
