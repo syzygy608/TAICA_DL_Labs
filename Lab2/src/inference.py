@@ -1,4 +1,26 @@
 import argparse
+import torch
+from oxford_pet import OxfordPetDataset
+import numpy as np
+
+def inference(args):
+    model = torch.load(args.model) # 存取模型
+    model.eval()
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model.to(device)
+    data = OxfordPetDataset(args.data_path, mode="test") # 讀取測試集
+    data_loader = torch.utils.data.DataLoader(data, batch_size=args.batch_size, shuffle=False)
+
+    dice_score = []
+    for batch in data_loader:
+        images = batch['image'].to(device)
+        masks = batch['mask'].to(device)
+        predictions = model(images) # 取得模型預測結果
+        dice = dice_score(predictions, masks)
+        dice_score.append(dice)
+    print(f'Model: {args.model}')
+    print(f'Dice Score: {np.mean(dice_score):.4f}')
+
 
 def get_args():
     parser = argparse.ArgumentParser(description='Predict masks from input images')
@@ -10,5 +32,5 @@ def get_args():
 
 if __name__ == '__main__':
     args = get_args()
-
-    assert False, "Not implemented yet!"
+    inference(args)
+    

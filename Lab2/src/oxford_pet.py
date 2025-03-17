@@ -1,5 +1,6 @@
 import os
 import torch
+import torchvision as tv
 import shutil
 import numpy as np
 
@@ -137,7 +138,22 @@ def load_dataset(data_path, mode):
     if not os.path.exists(images_path) or not os.path.exists(annotations_path):
         OxfordPetDataset.download(data_path)
 
-    # load the dataset
-    dataset = OxfordPetDataset(root=data_path, mode=mode) if mode != "test" else SimpleOxfordPetDataset(root=data_path, mode=mode)
-    dataloader = torch.utils.data.DataLoader(dataset, batch_size=32, shuffle=(mode == "train"))
-    return dataloader
+    # 將影像資料轉換成 tensor，並統一尺寸，訓練集增加多種轉換
+    if mode == "train" or mode == "val":
+        transform = tv.transforms.Compose([
+            tv.transforms.Resize((512, 512)),
+            tv.transforms.RandomHorizontalFlip(),
+            tv.transforms.RandomVerticalFlip(),
+            tv.transforms.RandomRotation(20),
+            tv.transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+            tv.transforms.ToTensor(),
+        ])
+    else:
+        transform = tv.transforms.Compose([
+            tv.transforms.Resize((512, 512)),
+            tv.transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+            tv.transforms.ToTensor(),
+        ])
+    
+    dataset = OxfordPetDataset(data_path, mode=mode, transform=transform)
+    return dataset
