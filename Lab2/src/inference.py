@@ -21,7 +21,7 @@ def inference(args):
         masks = batch['mask'].to(device)
         predictions = model(images) # 取得模型預測結果
         dice = dice_score(predictions, masks)
-        dice_score.append(dice)
+        dice_score.append(dice.item())
     print(f'Model: {args.model}')
     print(f'Dice Score: {np.mean(dice_score):.4f}')
 
