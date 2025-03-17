@@ -32,3 +32,10 @@ class UNet(nn.Module):
             x = torch.cat([x, skip], dim=1) # 進行 skip connection
             x = self.ups[i + 1](x) # 進行 convolution
         return self.final_conv(x) # 輸出預測結果
+    
+if __name__ == '__main__':
+    model = UNet(in_channels=3, out_channels=1)
+    x = torch.randn(2, 3, 256, 256)
+    print(model(x).shape)
+    print(model)
+    
