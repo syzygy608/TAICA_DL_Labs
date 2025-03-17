@@ -8,7 +8,8 @@ from utils import dice_score
 def inference(args):
     if args.model_name == "unet":
         model = UNet(in_channels=3, out_channels=1)
-    state_dict = torch.load(args.model)
+    
+    state_dict = torch.load("../saved_models/" + args.model + '_best_model.pth')
     model.load_state_dict(state_dict)  # 將參數載入模型
     model.eval()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -29,8 +30,7 @@ def inference(args):
 
 def get_args():
     parser = argparse.ArgumentParser(description='Predict masks from input images')
-    parser.add_argument('--model_name', default="unet", help="name of model")
-    parser.add_argument('--model', default='../saved_models/unet_best_model.pth', help='path to the stored model weoght')
+    parser.add_argument('--model', '-m', default="unet", help="name of model")
     parser.add_argument('--data_path', type=str, help='path to the input data')
     parser.add_argument('--batch_size', '-b', type=int, default=1, help='batch size')
     
