@@ -31,31 +31,21 @@ class OxfordPetDataset(torch.utils.data.Dataset):
         image_path = os.path.join(self.images_directory, filename + ".jpg")
         mask_path = os.path.join(self.masks_directory, filename + ".png")
 
-        image = Image.open(image_path).convert("RGB")
-        trimap = Image.open(mask_path)
-        if self.transform is not None:
-            image = self.transform(image)
-            # image 加上 Normalize
-            image = tv.transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])(image)
-
-            trimap = self.transform(trimap)
-            
+        image = np.array(Image.open(image_path).convert("RGB"))
+        trimap = np.array(Image.open(mask_path))
         mask = self._preprocess_mask(trimap)
-        sample = dict(image=image, mask=mask, trimap=trimap)
+        sample = dict(image=image, mask=mask)
 
-        return sample
+        if self.transform is not None:
+            transformed = self.transform(**sample)
+            transformed["mask"] = transformed["mask"].squeeze(0)            
+        return transformed
 
     @staticmethod
     def _preprocess_mask(mask):
-        if not isinstance(mask, torch.Tensor):
-            mask = torch.tensor(mask, dtype=torch.float32)
-        else:
-            mask = mask.to(torch.float32)
-        
-        mask = torch.where(mask == 2.0, torch.zeros_like(mask), mask)
-        
-        condition = torch.logical_or(mask == 1.0, mask == 3.0)
-        mask = torch.where(condition, torch.ones_like(mask), mask)
+        mask = mask.astype(np.float32)
+        mask[mask == 2.0] = 0.0
+        mask[(mask == 1.0) | (mask == 3.0)] = 1.0
         return mask
 
     def _read_split(self):
