@@ -2,7 +2,8 @@ import argparse
 from oxford_pet import load_dataset
 from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
-from models import UNet, ResNetUNet
+from models.unet import UNet
+# from models.resnet_unet import ResNetUNet
 import tqdm
 from utils import dice_score
 from evaluate import evaluate
