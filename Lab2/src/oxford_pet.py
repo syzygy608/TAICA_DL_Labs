@@ -35,7 +35,11 @@ class OxfordPetDataset(torch.utils.data.Dataset):
         trimap = Image.open(mask_path)
         if self.transform is not None:
             image = self.transform(image)
+            # image 加上 Normalize
+            image = tv.transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])(image)
+
             trimap = self.transform(trimap)
+            
         mask = self._preprocess_mask(trimap)
         sample = dict(image=image, mask=mask, trimap=trimap)
 
@@ -149,14 +153,12 @@ def load_dataset(data_path, mode):
             tv.transforms.RandomVerticalFlip(),
             tv.transforms.RandomRotation(20),
             tv.transforms.ToTensor(),
-            tv.transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
             
         ])
     else:
         transform = tv.transforms.Compose([
             tv.transforms.Resize((512, 512)),
             tv.transforms.ToTensor(),
-            tv.transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
         ])
     
     dataset = OxfordPetDataset(data_path, mode=mode, transform=transform)
