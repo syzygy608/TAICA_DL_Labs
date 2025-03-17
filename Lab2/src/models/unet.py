@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from models.model_blocks import ConvBlock
+from model_blocks import ConvBlock
 
 class UNet(nn.Module):
     def __init__(self, in_channels, out_channels, feature_sizes = [64, 128, 256, 512, 1024]):
@@ -35,7 +35,7 @@ class UNet(nn.Module):
     
 if __name__ == '__main__':
     model = UNet(in_channels=3, out_channels=1)
-    x = torch.randn(2, 3, 256, 256)
+    x = torch.randn(2, 3, 1024, 1024)
     print(model(x).shape)
     print(model)
     
