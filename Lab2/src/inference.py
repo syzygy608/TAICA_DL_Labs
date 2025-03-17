@@ -3,6 +3,7 @@ import torch
 from oxford_pet import load_dataset
 import numpy as np
 from models.unet import UNet
+from utils import dice_score
 
 def inference(args):
     if args.model_name == "unet":
@@ -15,15 +16,15 @@ def inference(args):
     data = load_dataset(args.data_path, 'test')
     data_loader = torch.utils.data.DataLoader(data, batch_size=args.batch_size, shuffle=False)
 
-    dice_score = []
+    dice_scores = []
     for batch in data_loader:
         images = batch['image'].to(device)
         masks = batch['mask'].to(device)
         predictions = model(images) # 取得模型預測結果
         dice = dice_score(predictions, masks)
-        dice_score.append(dice.item())
+        dice_scores.append(dice.item())
     print(f'Model: {args.model}')
-    print(f'Dice Score: {np.mean(dice_score):.4f}')
+    print(f'Dice Score: {np.mean(dice_scores):.4f}')
 
 
 def get_args():
