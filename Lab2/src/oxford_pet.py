@@ -37,9 +37,17 @@ class OxfordPetDataset(torch.utils.data.Dataset):
         sample = dict(image=image, mask=mask)
 
         if self.transform is not None:
-            transformed = dict(image=self.transform(image=sample["image"])["image"], mask=self.transform(image=sample["mask"])["image"])
-            transformed["mask"] = transformed["mask"].squeeze(0)            
-        return transformed
+            # 將 numpy array 轉為 PIL Image，因為 Compose 通常處理 PIL Image
+            image_pil = Image.fromarray(sample["image"])
+            mask_pil = Image.fromarray(sample["mask"])
+
+            transformed_image = self.transform(image_pil)
+            transformed_mask = self.transform(mask_pil)
+            
+            # 確保 mask 的維度正確
+            transformed_mask = transformed_mask.squeeze(0) if transformed_mask.dim() > 2 else transformed_mask
+            return dict(image=transformed_image, mask=transformed_mask)
+        return sample
 
     @staticmethod
     def _preprocess_mask(mask):
