@@ -35,7 +35,7 @@ def train(args):
 
     writer = SummaryWriter()
     
-    best_score = 0.8
+    best_score = 0.7
     best_model_path = "../saved_models/" + args.model + '_best_model.pth'
 
     for epoch in range(args.epochs):
@@ -79,7 +79,7 @@ def get_args():
     parser.add_argument('--batch_size', '-b', type=int, default=12, help='batch size')
     parser.add_argument('--learning-rate', '-lr', type=float, default=1e-3, help='learning rate')
     parser.add_argument('--model', '-m', type=str, choices=['unet', 'resnet'], default='unet', help='model to use')
-    parser.add_argument('--weight-decay', '-wd', type=float, default=1e-1, help='weight decay')
+    parser.add_argument('--weight-decay', '-wd', type=float, default=2e-4, help='weight decay')
 
     return parser.parse_args()
  

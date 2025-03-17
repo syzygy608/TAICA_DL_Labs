@@ -11,7 +11,7 @@
 ### 1. Implementation Details (30%)
 
 #### Unet
-Both Unet model and resnet34+unet model need a convolution block. The convolution block is a combination of two 3x3 convolution layers with batch normalization and ReLU activation function. The first convolution layer has 64 filters and the second convolution layer has 128 filters. The convolution block is used in the encoder part of the Unet model and the resnet34+unet model.
+Both Unet model and resnet34+unet model need a convolution block. The convolution block is a combination of two 3x3 convolution layers with batch normalization and ReLU activation function. The convolution block is used in the encoder part of the Unet model and the resnet34+unet model.
 
 #### Model Training
 
@@ -27,6 +27,9 @@ First, we need to make our training data in diverse forms. We can use data augme
 ### 4. Execution steps (0%)
 
 ### 5. Discussion (20%)
+
+#### Unet
+I find that learning rate for 0.001 and weight decay for 0.0001 is a good choice. The model can converge quickly and the loss is low. The model can achieve a good performance on the validation after 10 epochs with batch size 12.
 
 ### 6. Reference
 
