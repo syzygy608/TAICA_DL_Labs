@@ -6,7 +6,7 @@ from models.unet import UNet
 
 def inference(args):
     if args.model_name == "unet":
-        model = UNet()
+        model = UNet(3, 1)
     state_dict = torch.load(args.model)
     model.load_state_dict(state_dict)  # 將參數載入模型
     model.eval()
