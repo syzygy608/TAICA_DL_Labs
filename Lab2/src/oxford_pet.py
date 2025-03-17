@@ -1,8 +1,9 @@
 import os
 import torch
-import torchvision as tv
+import albumentations as A
 import shutil
 import numpy as np
+from albumentations.pytorch import ToTensorV2
 
 from PIL import Image
 from tqdm import tqdm
@@ -37,14 +38,8 @@ class OxfordPetDataset(torch.utils.data.Dataset):
         sample = dict(image=image, mask=mask)
 
         if self.transform is not None:
-            # 將 numpy array 轉為 PIL Image，因為 Compose 通常處理 PIL Image
-            image_pil = Image.fromarray(sample["image"])
-            mask_pil = Image.fromarray(sample["mask"])
-
-            transformed_image = self.transform(image_pil)
-            transformed_mask = self.transform(mask_pil)
-
-            return dict(image=transformed_image, mask=transformed_mask)
+            sample = self.transform(**sample)
+            sample["mask"] = sample["mask"].unsqueeze(0)
         return sample
 
     @staticmethod
@@ -145,18 +140,20 @@ def load_dataset(data_path, mode):
 
     # 將影像資料轉換成 tensor，並統一尺寸，訓練集增加多種轉換
     if mode == "train" or mode == "val":
-        transform = tv.transforms.Compose([
-            tv.transforms.Resize((512, 512)),
-            tv.transforms.RandomHorizontalFlip(),
-            tv.transforms.RandomVerticalFlip(),
-            tv.transforms.RandomRotation(20),
-            tv.transforms.ToTensor(),
+        transform = A.Compose([
+            A.Resize(512, 512),
+            A.HorizontalFlip(p=0.5),
+            A.RandomBrightnessContrast(p=0.2),
+            A.ShiftScaleRotate(p=0.2),
+            A.Normalize(),
+            ToTensorV2(),
             
         ])
     else:
-        transform = tv.transforms.Compose([
-            tv.transforms.Resize((512, 512)),
-            tv.transforms.ToTensor(),
+        transform = A.Compose([
+            A.Resize(512, 512),
+            A.Normalize(),
+            ToTensorV2(),
         ])
     
     dataset = OxfordPetDataset(data_path, mode=mode, transform=transform)
