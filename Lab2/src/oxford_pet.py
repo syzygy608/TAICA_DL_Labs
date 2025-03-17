@@ -37,7 +37,7 @@ class OxfordPetDataset(torch.utils.data.Dataset):
         sample = dict(image=image, mask=mask)
 
         if self.transform is not None:
-            transformed = self.transform(**sample)
+            transformed = dict(image=self.transform(image=sample["image"])["image"], mask=self.transform(image=sample["mask"])["image"])
             transformed["mask"] = transformed["mask"].squeeze(0)            
         return transformed
 
