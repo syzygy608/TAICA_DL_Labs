@@ -1,18 +1,18 @@
 import argparse
 import torch
-from oxford_pet import OxfordPetDataset
+from oxford_pet import load_dataset
 import numpy as np
 from models.unet import UNet
 
 def inference(args):
     if args.model_name == "unet":
-        model = UNet(3, 1)
+        model = UNet(in_channels=3, out_channels=1)
     state_dict = torch.load(args.model)
     model.load_state_dict(state_dict)  # 將參數載入模型
     model.eval()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
-    data = OxfordPetDataset(args.data_path, mode="test") # 讀取測試集
+    data = load_dataset(args.data_path, 'test')
     data_loader = torch.utils.data.DataLoader(data, batch_size=args.batch_size, shuffle=False)
 
     dice_score = []
