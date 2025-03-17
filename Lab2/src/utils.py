@@ -18,8 +18,10 @@ def dice_score(pred_mask, gt_mask):
     if not isinstance(gt_mask, torch.Tensor):
         gt_mask = torch.tensor(gt_mask, dtype=torch.float32)
 
-    pred_mask[pred_mask > 0.5] = torch.tensor(1.0)
-    pred_mask[pred_mask <= 0.5] = torch.tensor(0.0)
+    pred_mask = (pred_mask > 0.5).float()
+    gt_mask = gt_mask.float()
+    assert pred_mask.max() <= 1 and pred_mask.min() >= 0, "pred_mask out of range"
+    assert gt_mask.max() <= 1 and gt_mask.min() >= 0, "gt_mask out of range"
     
     # 計算交集 (intersection)
     intersection = torch.sum(pred_mask * gt_mask)
