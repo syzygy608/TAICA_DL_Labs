@@ -52,8 +52,10 @@ class OxfordPetDataset(torch.utils.data.Dataset):
         else:
             mask = mask.to(torch.float32)
         
-        mask = torch.where(mask == 2.0, torch.tensor(0.0), mask)
-        mask = torch.where((mask == 1.0 | mask == 3.0), torch.tensor(1.0), mask)
+        mask = torch.where(mask == 2.0, torch.zeros_like(mask), mask)
+        
+        condition = torch.logical_or(mask == 1.0, mask == 3.0)
+        mask = torch.where(condition, torch.ones_like(mask), mask)
         return mask
 
     def _read_split(self):
