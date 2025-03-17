@@ -34,8 +34,8 @@ class OxfordPetDataset(torch.utils.data.Dataset):
         image = Image.open(image_path).convert("RGB")
         trimap = Image.open(mask_path)
         if self.transform is not None:
-            image = np.array(self.transform(image))
-            trimap = np.array(self.transform(trimap))
+            image = self.transform(image)
+            trimap = self.transform(trimap)
         mask = self._preprocess_mask(trimap)
         sample = dict(image=image, mask=mask, trimap=trimap)
 
@@ -43,9 +43,13 @@ class OxfordPetDataset(torch.utils.data.Dataset):
 
     @staticmethod
     def _preprocess_mask(mask):
-        mask = mask.astype(np.float32)
-        mask[mask == 2.0] = 0.0
-        mask[(mask == 1.0) | (mask == 3.0)] = 1.0
+        if not isinstance(mask, torch.Tensor):
+            mask = torch.tensor(mask, dtype=torch.float32)
+        else:
+            mask = mask.to(torch.float32)
+        
+        mask = torch.where(mask == 2.0, torch.tensor(0.0), mask)
+        mask = torch.where((mask == 1.0 | mask == 3.0), torch.tensor(1.0), mask)
         return mask
 
     def _read_split(self):
