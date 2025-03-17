@@ -47,6 +47,9 @@ def train(args):
             images = batch['image'].to(device)
             masks = batch['mask'].to(device)
 
+            writer.add_images('images', images, i)
+            writer.add_images('masks/true', masks, i)
+
             predictions = model(images) # 取得模型預測結果
             loss = criterion(predictions, masks) + (dice_loss(predictions, masks)) # 計算損失值
             train_loss.append(loss.item()) # 將損失值加入 train_loss 中
@@ -58,8 +61,8 @@ def train(args):
                 train_score.append(score.item())
             progress_bar.set_description(f'Epoch {epoch+1}/{args.epochs}, Loss: {np.mean(train_loss):.4f}, Dice Score: {np.mean(train_score):.4f}')
 
-        writer.add_scalar('Loss/train', np.mean(train_loss), epoch)
-        writer.add_scalar('Dice/train', np.mean(train_score), epoch)
+            writer.add_scalar('Loss/train', np.mean(train_loss), epoch)
+            writer.add_scalar('Dice/train', np.mean(train_score), epoch)
 
         validation_loss, validation_score = evaluate(model, val_data_loader, device)
         writer.add_scalar('Loss/val', validation_loss, epoch)
