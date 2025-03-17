@@ -6,7 +6,7 @@ from models.unet import UNet
 from utils import dice_score
 
 def inference(args):
-    if args.model_name == "unet":
+    if args.model == "unet":
         model = UNet(in_channels=3, out_channels=1)
     
     state_dict = torch.load("../saved_models/" + args.model + '_best_model.pth')
