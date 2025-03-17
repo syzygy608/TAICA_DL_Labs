@@ -148,14 +148,15 @@ def load_dataset(data_path, mode):
             tv.transforms.RandomHorizontalFlip(),
             tv.transforms.RandomVerticalFlip(),
             tv.transforms.RandomRotation(20),
-            tv.transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
             tv.transforms.ToTensor(),
+            tv.transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+            
         ])
     else:
         transform = tv.transforms.Compose([
             tv.transforms.Resize((512, 512)),
-            tv.transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
             tv.transforms.ToTensor(),
+            tv.transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
         ])
     
     dataset = OxfordPetDataset(data_path, mode=mode, transform=transform)
