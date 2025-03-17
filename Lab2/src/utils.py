@@ -29,8 +29,6 @@ def dice_score(pred_mask, gt_mask):
     # 計算 Dice 分數
     dice_score = 2 * intersection / (union + eps)
     
-    # 轉成 numpy array
-    dice_score = dice_score.cpu().numpy()
     return dice_score
 
 def dice_loss(pred_mask, gt_mask):
