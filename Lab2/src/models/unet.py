@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from model_blocks import ConvBlock
+from .model_blocks import ConvBlock
 
 class UNet(nn.Module):
     def __init__(self, in_channels, out_channels, feature_sizes = [64, 128, 256, 512, 1024]):

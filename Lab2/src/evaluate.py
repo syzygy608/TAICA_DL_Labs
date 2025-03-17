@@ -9,7 +9,7 @@ def evaluate(net, data, device):
 
     criterion = nn.BCEWithLogitsLoss()
     with torch.no_grad():
-        net.eval() # 設定模型為評估模式，所以不會使用 dropout
+        net.eval()
         for batch in data:
             images = batch['image'].to(device)
             masks = batch['mask'].to(device)
