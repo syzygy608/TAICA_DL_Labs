@@ -31,16 +31,14 @@ class OxfordPetDataset(torch.utils.data.Dataset):
         image_path = os.path.join(self.images_directory, filename + ".jpg")
         mask_path = os.path.join(self.masks_directory, filename + ".png")
 
-        image = np.array(Image.open(image_path).convert("RGB"))
-
-        trimap = np.array(Image.open(mask_path))
-        mask = self._preprocess_mask(trimap)
-
-        sample = dict(image=image, mask=mask, trimap=trimap)
+        image = Image.open(image_path).convert("RGB")
+        trimap = Image.open(mask_path)
         if self.transform is not None:
-            sample.image = self.transform(sample["image"])
-            sample.mask = self.transform(sample["mask"])
-            sample.trimap = self.transform(sample["trimap"])
+            image = np.array(self.transform(image))
+            trimap = np.array(self.transform(trimap))
+        mask = self._preprocess_mask(trimap)
+        sample = dict(image=image, mask=mask, trimap=trimap)
+
         return sample
 
     @staticmethod
