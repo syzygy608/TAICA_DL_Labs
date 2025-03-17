@@ -2,6 +2,12 @@
 
 ## Binary Semantic Segmentation
 
+### 0. Environment
+
+- CPU: Intel(R) Core(TM) i7-14700
+- GPU: NVIDIA GeForce RTX 4090
+- OS: Ubuntu 22.04
+
 ### 1. Implementation Details (30%)
 
 #### Unet

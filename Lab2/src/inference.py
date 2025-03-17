@@ -2,9 +2,13 @@ import argparse
 import torch
 from oxford_pet import OxfordPetDataset
 import numpy as np
+from models.unet import UNet
 
 def inference(args):
-    model = torch.load(args.model) # 存取模型
+    if args.model_name == "unet":
+        model = UNet()
+    state_dict = torch.load(args.model)
+    model.load_state_dict(state_dict)  # 將參數載入模型
     model.eval()
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
@@ -24,6 +28,7 @@ def inference(args):
 
 def get_args():
     parser = argparse.ArgumentParser(description='Predict masks from input images')
+    parser.add_argument('--model_name', default="unet", help="name of model")
     parser.add_argument('--model', default='../saved_models/unet_best_model.pth', help='path to the stored model weoght')
     parser.add_argument('--data_path', type=str, help='path to the input data')
     parser.add_argument('--batch_size', '-b', type=int, default=1, help='batch size')
