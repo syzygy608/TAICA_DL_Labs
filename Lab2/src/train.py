@@ -48,7 +48,7 @@ def train(args):
             masks = batch['mask'].to(device)
 
             predictions = model(images) # 取得模型預測結果
-            loss = 0.5 * criterion(predictions, masks) + 0.5 * (dice_loss(predictions, masks)) # 計算損失值
+            loss = criterion(predictions, masks) + (dice_loss(predictions, masks)) # 計算損失值
             train_loss.append(loss.item()) # 將損失值加入 train_loss 中
             optimizer.zero_grad() # 梯度歸零
             loss.backward() # 反向傳播

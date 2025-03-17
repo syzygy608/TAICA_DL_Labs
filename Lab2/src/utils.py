@@ -18,8 +18,6 @@ def dice_score(pred_mask, gt_mask):
     if not isinstance(gt_mask, torch.Tensor):
         gt_mask = torch.tensor(gt_mask, dtype=torch.float32)
 
-    # sigmoid 函數將輸出值轉為機率值
-    pred_mask = torch.sigmoid(pred_mask)
     # 計算交集 (intersection)
     intersection = torch.sum(pred_mask * gt_mask)
     

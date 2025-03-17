@@ -16,7 +16,7 @@ def evaluate(net, data, device):
             masks = batch['mask'].to(device)
 
             predictions = net(images)
-            loss = 0.5 * criterion(predictions, masks) + 0.5 * dice_loss(predictions, masks)
+            loss = criterion(predictions, masks) + dice_loss(predictions, masks)
             validation_loss.append(loss.item())
 
             score = dice_score(predictions, masks)
