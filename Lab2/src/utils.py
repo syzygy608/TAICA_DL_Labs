@@ -18,6 +18,9 @@ def dice_score(pred_mask, gt_mask):
     if not isinstance(gt_mask, torch.Tensor):
         gt_mask = torch.tensor(gt_mask, dtype=torch.float32)
 
+    pred_mask[pred_mask > 0.5] = torch.tensor(1.0)
+    pred_mask[pred_mask <= 0.5] = torch.tensor(0.0)
+    
     # 計算交集 (intersection)
     intersection = torch.sum(pred_mask * gt_mask)
     

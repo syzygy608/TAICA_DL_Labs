@@ -13,6 +13,9 @@ I learned dropout and L2 regularization from [here](https://www.bilibili.com/vid
 
 ### 2. Data Preprocessing (25%)
 
+First, we need to make our training data in diverse forms. We can use data augmentation to increase the diversity of the training data. We also need to ensure the image and mask are aligned. To do this, I use albumentations to augment the data. I use the following augmentations:
+
+
 ### 3. Analyze the experiment results (25%)
 
 ### 4. Execution steps (0%)
