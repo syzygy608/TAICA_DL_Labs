@@ -22,3 +22,6 @@ I learned dropout and L2 regularization from [here](https://www.bilibili.com/vid
 ### 6. Reference
 
 1. 【调教神经网络咋这么难？【白话DeepSeek03】】 https://www.bilibili.com/video/BV1RqXRYDEe2/?share_source=copy_web&vd_source=8eb0208b6e349b456c095c16067fb3af
+2. V-Net https://arxiv.org/abs/1606.04797
+3. Unet https://arxiv.org/abs/1505.04597
+4. Resnet https://arxiv.org/abs/1512.03385

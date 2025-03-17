@@ -56,7 +56,7 @@ def train(args):
             with torch.no_grad():
                 score = dice_score(predictions, masks)
                 train_score.append(score.item())
-            progress_bar.set_description(f'Epoch {epoch+1}/{args.epochs}, Loss: {loss.item():.4f}, Dice Score: {score:.4f}')
+            progress_bar.set_description(f'Epoch {epoch+1}/{args.epochs}, Loss: {np.mean(train_loss):.4f}, Dice Score: {np.mean(train_score):.4f}')
 
         writer.add_scalar('Loss/train', np.mean(train_loss), epoch)
         writer.add_scalar('Dice/train', np.mean(train_score), epoch)
