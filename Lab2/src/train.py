@@ -28,8 +28,6 @@ def train(args):
     
     # 優化器新增 L2 正則化項
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate, weight_decay=args.weight_decay)
-    # 使用 scheduler 來調整 learning rate
-    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=0.1)
 
     # 使用 BCELoss 作為損失函數
     criterion = nn.BCEWithLogitsLoss()
@@ -72,8 +70,7 @@ def train(args):
             best_score = validation_score
             torch.save(model.state_dict(), best_model_path) # 儲存模型權重
             print(f"Model saved at {best_model_path}")
-        scheduler.step() # 更新 learning rate
-    writer.close()
+    writer.close()  
 
 def get_args():
     parser = argparse.ArgumentParser(description='Train the UNet on images and target masks')

@@ -28,6 +28,8 @@ For both ResNet and U-Net, I initialized the weights using He initialization, wh
 I opted for Adam over SGD to leverage its faster convergence and robustness, addressing SGD’s limitations in learning rate tuning and gradient adaptability. The training method in the U-Net paper, designed for multi-class segmentation with weighted cross-entropy, does not align with this assignment’s binary foreground-background separation task evaluated using Dice score. For this two-class problem, combining BCE with Dice Loss is more suitable, as it directly optimizes for overlap metrics like Dice, improving performance over the paper’s approach.
 I learned dropout and L2 regularization from [here](https://www.bilibili.com/video/BV1RqXRYDEe2/?share_source=copy_web&vd_source=8eb0208b6e349b456c095c16067fb3af). I use L2 regularization to calculate the loss to prevent overfitting.
 
+Most important enhancements are the use of modern initialization (He) and normalization (BatchNorm), which significantly improve training stability and convergence. These enhancements are not present in the original U-Net, designed for biomedical images, but are common in modern architectures like ResNet. By incorporating these techniques, I adapted U-Net to natural image tasks, enhancing its performance and usability.
+
 ## 2. Data Preprocessing (25%)
 
 I applied the following processing to the images:
