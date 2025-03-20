@@ -147,16 +147,15 @@ def load_dataset(data_path, mode):
             A.ElasticTransform(
                 alpha=120,
                 sigma=10,
-                alpha_affine=10,
                 interpolation=cv2.INTER_CUBIC,
-                border_mode=cv2.BORDER_REFLECT_101,
                 p=0.5
             ),
-            # 移位 (Shift)
-            A.ShiftScaleRotate(
-                shift_limit=0.1,
-                scale_limit=0,
-                rotate_limit=0,
+            A.Affine(
+                translate_percent=0.1,
+                scale=1.0,
+                rotate=0,
+                interpolation=cv2.INTER_CUBIC,
+                mode=cv2.BORDER_REFLECT_101,
                 p=0.5
             ),
             # 旋轉 (Rotation)
