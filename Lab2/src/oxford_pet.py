@@ -46,8 +46,8 @@ class OxfordPetDataset(torch.utils.data.Dataset):
     @staticmethod
     def _preprocess_mask(mask):
         mask = mask.astype(np.float32)
-        mask[(mask == 2.0) | (mask == 3.0)] = 0.0
-        mask[mask == 1.0] = 1.0
+        mask[mask == 2.0] = 0.0
+        mask[(mask == 1.0) | (mask == 3.0)] = 1.0
         return mask
 
     def _read_split(self):
