@@ -143,25 +143,19 @@ def load_dataset(data_path, mode):
     if mode == "train":
         transform = A.Compose([
             A.Resize(512, 512),
-            A.ElasticTransform(
-                alpha=120,
-                sigma=10,
-                interpolation=cv2.INTER_CUBIC,
+            A.Affine(
+                translate_percent={"x": (-0.1, 0.1), "y": (-0.1, 0.1)},
+                scale=(0.8, 1.2),
+                rotate=(-30, 30),
                 p=0.5
             ),
-            A.Rotate(
-                limit=30,
-                interpolation=cv2.INTER_CUBIC,
-                border_mode=cv2.BORDER_REFLECT_101,
-                p=0.5
-            ),
-            A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
+            A.Normalize(),
             ToTensorV2()
         ], additional_targets={"mask": "mask"})
     else:
         transform = A.Compose([
             A.Resize(512, 512),
-            A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
+            A.Normalize(),
             ToTensorV2()
         ], additional_targets={"mask": "mask"})
     

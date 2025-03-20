@@ -32,16 +32,27 @@ I learned dropout and L2 regularization from [here](https://www.bilibili.com/vid
 
 I applied the following processing to the images:
 
-- Resize: Uniformly resized the images to 512×512.
-- Elastic Deformation: Simulated shape variations to enhance the model’s adaptability to deformations.
-- Rotation: Randomly rotated the images by ±30° to increase directional diversity.
-- Normalization: Standardized the RGB images using ImageNet’s mean and standard deviation.
-- Tensor Conversion: Converted NumPy arrays to PyTorch tensors.
 
-My preprocessing pipeline extends U-Net’s elastic deformation with additional augmentations (e.g., rotation) and modern RGB handling (fixed 512×512 size, ImageNet normalization), suited for natural image tasks. U-Net, designed for biomedical images, uses simpler augmentation and lacks explicit normalization or tensor conversion.
+
+My preprocessing pipeline extends U-Net’s elastic deformation with additional augmentations and modern RGB handling (fixed 512×512 size, ImageNet normalization), suited for natural image tasks. U-Net, designed for biomedical images, uses simpler augmentation and lacks explicit normalization or tensor conversion.
 
 
 ## 3. Analyze the experiment results (25%)
+
+In this lab, I use tensorboard to visualize the training process.
+
+### UNet
+
+I first train the UNet model with the following hyperparameters:
+
+- Batch size: 1
+- Learning rate: 0.001
+- Weight decay: 0.0002
+- Epochs: 10
+
+The training loss and validation loss are shown in the following figure.
+
+The orange line is showing the performance of the one with original initialization, and the blue line is showing the performance of the one with He initialization. The model with He initialization has a lower accuracy at the beginning, but it can converge quickly and achieve a better performance on the validation set after 10 epochs.
 
 ## 4. Execution steps (0%)
 
