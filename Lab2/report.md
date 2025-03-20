@@ -26,21 +26,61 @@ I learned dropout and L2 regularization from [here](https://www.bilibili.com/vid
 
 ## 2. Data Preprocessing (25%)
 
+I applied the following processing to the images:
 
+- Resize: Uniformly resized the images to 512×512.
+- Elastic Deformation: Simulated shape variations to enhance the model’s adaptability to deformations.
+- Rotation: Randomly rotated the images by ±30° to increase directional diversity.
+- Normalization: Standardized the RGB images using ImageNet’s mean and standard deviation.
+- Tensor Conversion: Converted NumPy arrays to PyTorch tensors.
+
+My preprocessing pipeline extends U-Net’s elastic deformation with additional augmentations (e.g., rotation) and modern RGB handling (fixed 512×512 size, ImageNet normalization), suited for natural image tasks. U-Net, designed for biomedical images, uses simpler augmentation and lacks explicit normalization or tensor conversion.
 
 
 ## 3. Analyze the experiment results (25%)
 
 ## 4. Execution steps (0%)
 
+First, go to the `src` directory.
+
+```bash
+cd src
+```
+
+### Unet
+
+To train the Unet model, run the following command.
+
+```bash
+python train.py --model unet --batch_size 1 --lr 0.001 --weight_decay 0.0002 --epochs 10
+```
+
+To test the Unet model, run the following command.
+
+```bash
+python inference.py --model unet
+```
+
+To train the Resnet34+Unet model, run the following command.
+
+```bash
+python train.py --model resnet --batch_size 1 --lr 0.001 --weight_decay 0.0002 --epochs 10
+```
+
+To test the Resnet34+Unet model, run the following command.
+
+```bash
+python inference.py --model resnet
+```
+
+
 ## 5. Discussion (20%)
 
 ### Unet
-I find that learning rate for 0.001 and weight decay for 0.0001 is a good choice. The model can converge quickly and the loss is low. The model can achieve a good performance on the validation after 10 epochs with batch size 12.
+I find that learning rate for 0.001 and weight decay for 0.0002 is a good choice. The model can converge quickly and the loss is low. The model can achieve a good performance on the validation after 10 epochs with batch size 1.
 
 ## 6. Reference
 
 1. 【调教神经网络咋这么难？【白话DeepSeek03】】 https://www.bilibili.com/video/BV1RqXRYDEe2/?share_source=copy_web&vd_source=8eb0208b6e349b456c095c16067fb3af
-2. V-Net https://arxiv.org/abs/1606.04797
-3. Unet https://arxiv.org/abs/1505.04597
-4. Resnet https://arxiv.org/abs/1512.03385
+2. Unet https://arxiv.org/abs/1505.04597
+3. Resnet https://arxiv.org/abs/1512.03385

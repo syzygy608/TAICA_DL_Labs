@@ -143,36 +143,20 @@ def load_dataset(data_path, mode):
     if mode == "train":
         transform = A.Compose([
             A.Resize(512, 512),
-            # 彈性變形 (Elastic Deformation)
             A.ElasticTransform(
                 alpha=120,
                 sigma=10,
                 interpolation=cv2.INTER_CUBIC,
                 p=0.5
             ),
-            A.Affine(
-                translate_percent=0.1,
-                scale=1.0,
-                rotate=0,
-                interpolation=cv2.INTER_CUBIC,
-                p=0.5
-            ),
-            # 旋轉 (Rotation)
             A.Rotate(
                 limit=30,
                 interpolation=cv2.INTER_CUBIC,
                 border_mode=cv2.BORDER_REFLECT_101,
                 p=0.5
             ),
-            # 灰度變化 (Gray Value Variation)
-            A.RandomBrightnessContrast(
-                brightness_limit=0.2,
-                contrast_limit=0.2,
-                p=0.5
-            ),
             A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
             ToTensorV2()
-            
         ])
     else:
         transform = A.Compose([
