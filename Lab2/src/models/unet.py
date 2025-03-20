@@ -7,6 +7,8 @@ class UNet(nn.Module):
         super(UNet, self).__init__()
         self.downs = nn.ModuleList()
         self.ups = nn.ModuleList()
+        self.pool = nn.MaxPool2d(kernel_size=2, stride=2)
+        
         for feature_size in feature_sizes:
             self.downs.append(ConvBlock(in_channels, feature_size))
             in_channels = feature_size
@@ -15,18 +17,22 @@ class UNet(nn.Module):
             nn.Dropout2d(p=dropout),
         )
         for feature_size in reversed(feature_sizes):
-            self.ups.append(nn.ConvTranspose2d(feature_size * 2, feature_size, kernel_size=2, stride=2))
+            self.ups.append(nn.ConvTranspose2d(feature_size * 2, feature_size, kernel_size=2, stride=2, padding=0))
             self.ups.append(ConvBlock(feature_size * 2, feature_size))
-        self.final_conv = nn.Conv2d(feature_sizes[0], out_channels, kernel_size=1)
 
+        self.final_conv = nn.Conv2d(feature_sizes[0], out_channels, kernel_size=1)
+        self._initialize_weights()
+    
     def forward(self, x):
         skips = []
         for down in self.downs:
             x = down(x)
             skips.append(x)
-            x = nn.MaxPool2d(kernel_size=2)(x)
+            x = self.pool(x)
+
         x = self.bottleneck(x)
         skips = skips[::-1]
+
         for i in range(0, len(self.ups), 2):
             x = self.ups[i](x)
             skip = skips[i // 2] # 透過 // 2 取得對應的 skip connection
@@ -34,9 +40,19 @@ class UNet(nn.Module):
             x = self.ups[i + 1](x) # 進行 convolution
         return self.final_conv(x) # 輸出預測結果
     
+    def _initialize_weights(self):
+        for module in self.modules():
+            if isinstance(module, nn.Conv2d):
+                # 計算 N = in_channels * kernel_height * kernel_width
+                n = module.in_channels * module.kernel_size[0] * module.kernel_size[1]
+                # 高斯分佈初始化，均值 0，標準差 sqrt(2/n)
+                nn.init.normal_(module.weight, mean=0, std=(2 / n) ** 0.5)
+                if module.bias is not None:
+                    nn.init.constant_(module.bias, 0)
+    
 if __name__ == '__main__':
     model = UNet(in_channels=3, out_channels=1)
-    x = torch.randn(2, 3, 1024, 1024)
+    x = torch.randn(2, 3, 512, 512)
     print(model(x).shape)
     print(model)
     

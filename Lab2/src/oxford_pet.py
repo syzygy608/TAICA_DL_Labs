@@ -8,6 +8,7 @@ from albumentations.pytorch import ToTensorV2
 from PIL import Image
 from tqdm import tqdm
 from urllib.request import urlretrieve
+import cv2
 
 class OxfordPetDataset(torch.utils.data.Dataset):
     def __init__(self, root, mode="train", transform=None):
@@ -142,19 +143,40 @@ def load_dataset(data_path, mode):
     if mode == "train":
         transform = A.Compose([
             A.Resize(512, 512),
-            A.Affine(
-                translate_percent={"x": (-0.1, 0.1), "y": (-0.1, 0.1)},
-                scale=(0.8, 1.2),
-                rotate=(-30, 30),
+            # 彈性變形 (Elastic Deformation)
+            A.ElasticTransform(
+                alpha=120,
+                sigma=10,
+                alpha_affine=10,
+                interpolation=cv2.INTER_CUBIC,
+                border_mode=cv2.BORDER_REFLECT_101,
                 p=0.5
             ),
-            A.Normalize(),
+            # 移位 (Shift)
+            A.ShiftScaleRotate(
+                shift_limit=0.1,
+                scale_limit=0,
+                rotate_limit=0,
+                p=0.5
+            ),
+            # 旋轉 (Rotation)
+            A.Rotate(
+                limit=30,
+                interpolation=cv2.INTER_CUBIC,
+                border_mode=cv2.BORDER_REFLECT_101,
+                p=0.5
+            ),
+            # 灰度變化 (Gray Value Variation)
+            A.RandomBrightnessContrast(
+                brightness_limit=0.2,
+                contrast_limit=0.2,
+                p=0.5
+            ),
             ToTensorV2(),
         ])
     else:
         transform = A.Compose([
             A.Resize(512, 512),
-            A.Normalize(),
             ToTensorV2(),
         ])
     
