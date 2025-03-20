@@ -170,14 +170,15 @@ def load_dataset(data_path, mode):
                 contrast_limit=0.2,
                 p=0.5
             ),
-            ToTensorV2(),
-            A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225))
+            A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
+            ToTensorV2()
+            
         ])
     else:
         transform = A.Compose([
             A.Resize(512, 512),
-            ToTensorV2(),
-            A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225))
+            A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
+            ToTensorV2()
         ])
     
     dataset = OxfordPetDataset(data_path, mode=mode, transform=transform)
