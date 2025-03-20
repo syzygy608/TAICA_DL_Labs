@@ -3,7 +3,7 @@ import torch.nn as nn
 from .model_blocks import ConvBlock
 
 class UNet(nn.Module):
-    def __init__(self, in_channels, out_channels, feature_sizes = [64, 128, 256, 512], dropout=0.5):
+    def __init__(self, in_channels, out_channels, feature_sizes = [64, 128, 256, 512], dropout=0.1):
         super(UNet, self).__init__()
         self.downs = nn.ModuleList()
         self.ups = nn.ModuleList()

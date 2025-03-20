@@ -52,7 +52,13 @@ I first train the UNet model with the following hyperparameters:
 
 The training loss and validation loss are shown in the following figure.
 
-The orange line is showing the performance of the one with original initialization, and the blue line is showing the performance of the one with He initialization. The model with He initialization has a lower accuracy at the beginning, but it can converge quickly and achieve a better performance on the validation set after 10 epochs.
+The orange line is showing the performance of the one with original initialization, and the blue line is showing the performance of the one with He initialization. The model with He initialization has a lower accuracy at the beginning, but it can converge quickly and achieve a better performance on the validation set after 10 epochs. The model with original initialization has a higher accuracy at the beginning, but it has a little bit overfitting problem. In the test set, the model with He initialization has a better performance.
+
+### ResNet34+Unet
+
+I have the experience of training the UNet model, so I use the same initialization method to train the ResNet34+Unet model. The training loss and validation loss are shown in the following figure.
+
+
 
 ## 4. Execution steps (0%)
 
