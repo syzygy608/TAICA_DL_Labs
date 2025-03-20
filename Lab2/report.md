@@ -32,12 +32,11 @@ Most important enhancements are the use of modern initialization (He) and normal
 
 ## 2. Data Preprocessing (25%)
 
-I applied the following processing to the images:
-
-
+I resize images and masks to 512×512, applies random affine transformations (translation, scaling, rotation) with 50% probability, normalizes the image, and converts both to PyTorch tensors, ensuring synchronized geometric changes for segmentation tasks.
 
 My preprocessing pipeline extends U-Net’s elastic deformation with additional augmentations and modern RGB handling (fixed 512×512 size, ImageNet normalization), suited for natural image tasks. U-Net, designed for biomedical images, uses simpler augmentation and lacks explicit normalization or tensor conversion.
 
+Second, I consider the edges within the images as the foreground class for the segmentation task. Specifically, I process the annotations such that the edge regions—typically representing boundaries between objects and the background—are assigned to the foreground label (value 1). All other regions, including the interior of objects and the background, are treated as the background class (value 0). This binary classification approach focuses the model's attention on accurately delineating edge structures, which are critical for precise segmentation.
 
 ## 3. Analyze the experiment results (25%)
 
@@ -54,12 +53,30 @@ I first train the UNet model with the following hyperparameters:
 
 The training loss and validation loss are shown in the following figure.
 
-The orange line is showing the performance of the one with original initialization, and the blue line is showing the performance of the one with He initialization. The model with He initialization has a lower accuracy at the beginning, but it can converge quickly and achieve a better performance on the validation set after 10 epochs. The model with original initialization has a higher accuracy at the beginning, but it has a little bit overfitting problem. In the test set, the model with He initialization has a better performance.
+The orange line is showing the performance of the one with original initialization, and the blue line is showing the performance of the one with He initialization. The model with He initialization has a lower accuracy at the beginning, but it can converge quickly and achieve a better performance on the validation set after 10 epochs. The model with original initialization has a higher accuracy at the beginning, but it has a little bit overfitting problem.
+
+![alt text](image.png)
+
+After adjusting the learning rate to 0.0001, the training loss and validation loss are shown in the following figure.
+
+![alt text](image-1.png)
+
+The light blue line is showing the performance of the one with learning rate 0.0001, and the dark blue line is showing the performance of the one with learning rate 0.001.
+
+After I adjust the learning rate to 0.0001, the model can reach the baseline (Dice score 0.8448) after 10 epochs. The model with learning rate 0.001 can not reach the baseline after 10 epochs.
+
+![alt text](image-2.png)
+
+#### Final hyperparameters
+
+- Batch size: 8
+- Learning rate: 0.0001
+- Weight decay: 0.0002
+- Epochs: 10
 
 ### ResNet34+Unet
 
 I have the experience of training the UNet model, so I use the same initialization method to train the ResNet34+Unet model. The training loss and validation loss are shown in the following figure.
-
 
 
 ## 4. Execution steps (0%)
@@ -75,7 +92,7 @@ cd src
 To train the Unet model, run the following command.
 
 ```bash
-python train.py --model unet --batch_size 1 --lr 0.001 --weight_decay 0.0002 --epochs 10
+python train.py --model unet --batch_size 8 --lr 0.0001 --weight_decay 0.0002 --epochs 10
 ```
 
 To test the Unet model, run the following command.
@@ -87,7 +104,7 @@ python inference.py --model unet
 To train the Resnet34+Unet model, run the following command.
 
 ```bash
-python train.py --model resnet --batch_size 1 --lr 0.001 --weight_decay 0.0002 --epochs 10
+python train.py --model resnet --batch_size 8 --lr 0.0001 --weight_decay 0.0002 --epochs 10
 ```
 
 To test the Resnet34+Unet model, run the following command.

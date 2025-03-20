@@ -78,7 +78,7 @@ def get_args():
     parser.add_argument('--epochs', '-e', type=int, default=10, help='number of epochs')
     parser.add_argument('--batch_size', '-b', type=int, default=8, help='batch size')
     parser.add_argument('--learning-rate', '-lr', type=float, default=1e-4, help='learning rate')
-    parser.add_argument('--model', '-m', type=str, choices=['unet', 'resnet'], default='unet', help='model to use')
+    parser.add_argument('--model', '-m', type=str, choices=['unet', 'resnet'], default='resnet', help='model to use')
     parser.add_argument('--weight-decay', '-wd', type=float, default=2e-4, help='weight decay')
 
     return parser.parse_args()
