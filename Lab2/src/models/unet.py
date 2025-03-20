@@ -43,12 +43,14 @@ class UNet(nn.Module):
     def _initialize_weights(self):
         for module in self.modules():
             if isinstance(module, nn.Conv2d):
-                # 計算 N = in_channels * kernel_height * kernel_width
-                n = module.in_channels * module.kernel_size[0] * module.kernel_size[1]
-                # 高斯分佈初始化，均值 0，標準差 sqrt(2/n)
-                nn.init.normal_(module.weight, mean=0, std=(2 / n) ** 0.5)
-                if module.bias is not None:
+                # 使用 Kaiming initialization
+                nn.init.kaiming_normal_(module.weight, mode='fan_out', nonlinearity='relu')
+                if module.bias is not None: 
                     nn.init.constant_(module.bias, 0)
+            elif isinstance(module, nn.BatchNorm2d):
+                nn.init.constant_(module.weight, 1)
+                nn.init.constant_(module.bias, 0)
+
     
 if __name__ == '__main__':
     model = UNet(in_channels=3, out_channels=1)
