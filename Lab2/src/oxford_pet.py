@@ -155,7 +155,6 @@ def load_dataset(data_path, mode):
                 scale=1.0,
                 rotate=0,
                 interpolation=cv2.INTER_CUBIC,
-                mode=cv2.BORDER_REFLECT_101,
                 p=0.5
             ),
             # 旋轉 (Rotation)
@@ -172,11 +171,13 @@ def load_dataset(data_path, mode):
                 p=0.5
             ),
             ToTensorV2(),
+            A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225))
         ])
     else:
         transform = A.Compose([
             A.Resize(512, 512),
             ToTensorV2(),
+            A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225))
         ])
     
     dataset = OxfordPetDataset(data_path, mode=mode, transform=transform)
