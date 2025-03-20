@@ -157,13 +157,13 @@ def load_dataset(data_path, mode):
             ),
             A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
             ToTensorV2()
-        ])
+        ], additional_targets={"mask": "mask"})
     else:
         transform = A.Compose([
             A.Resize(512, 512),
             A.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
             ToTensorV2()
-        ])
+        ], additional_targets={"mask": "mask"})
     
     dataset = OxfordPetDataset(data_path, mode=mode, transform=transform)
     return dataset
