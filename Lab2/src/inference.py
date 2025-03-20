@@ -34,7 +34,7 @@ def get_args():
     parser = argparse.ArgumentParser(description='Predict masks from input images')
     parser.add_argument('--model', '-m', default="unet", help="name of model")
     parser.add_argument('--data_path', default="../dataset/oxford-iiit-pet", type=str, help='path to the input data')
-    parser.add_argument('--batch_size', '-b', type=int, default=1, help='batch size')
+    parser.add_argument('--batch_size', '-b', type=int, default=8, help='batch size')
     
     return parser.parse_args()
 

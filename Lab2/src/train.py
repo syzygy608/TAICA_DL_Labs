@@ -26,9 +26,10 @@ def train(args):
     elif args.model == 'resnet':
         model = ResNetUNet(in_channels=3, out_channels=1).to(device)
     
-    # 選擇優化器和損失函數
+    # 優化器新增 L2 正則化項
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate, weight_decay=args.weight_decay)
-    # 在優化器時新增 L2 正則化項
+    # 使用 scheduler 來調整 learning rate
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=0.1)
 
     # 使用 BCELoss 作為損失函數
     criterion = nn.BCEWithLogitsLoss()
@@ -70,14 +71,16 @@ def train(args):
         if validation_score > best_score: # 如果驗證集的分數比最佳分數還要高
             best_score = validation_score
             torch.save(model.state_dict(), best_model_path) # 儲存模型權重
+            print(f"Model saved at {best_model_path}")
+        scheduler.step() # 更新 learning rate
     writer.close()
 
 def get_args():
     parser = argparse.ArgumentParser(description='Train the UNet on images and target masks')
     parser.add_argument('--data_path', type=str, default="../dataset/oxford-iiit-pet", help='path of the input data')
     parser.add_argument('--epochs', '-e', type=int, default=10, help='number of epochs')
-    parser.add_argument('--batch_size', '-b', type=int, default=1, help='batch size')
-    parser.add_argument('--learning-rate', '-lr', type=float, default=1e-3, help='learning rate')
+    parser.add_argument('--batch_size', '-b', type=int, default=8, help='batch size')
+    parser.add_argument('--learning-rate', '-lr', type=float, default=1e-4, help='learning rate')
     parser.add_argument('--model', '-m', type=str, choices=['unet', 'resnet'], default='unet', help='model to use')
     parser.add_argument('--weight-decay', '-wd', type=float, default=2e-4, help='weight decay')
 
