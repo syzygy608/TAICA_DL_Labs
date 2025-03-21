@@ -8,7 +8,6 @@ from albumentations.pytorch import ToTensorV2
 from PIL import Image
 from tqdm import tqdm
 from urllib.request import urlretrieve
-import cv2
 
 class OxfordPetDataset(torch.utils.data.Dataset):
     def __init__(self, root, mode="train", transform=None):

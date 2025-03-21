@@ -5,3 +5,5 @@ Lab2/saved_models/*
 test/*
 .venv/*
 .vscode/*
+*.png
+report.md
