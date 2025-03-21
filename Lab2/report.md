@@ -34,9 +34,12 @@ Most important enhancements are the use of modern initialization (He) and normal
 
 I resize images and masks to 512×512, applies random affine transformations (translation, scaling, rotation) with 50% probability, normalizes the image, and converts both to PyTorch tensors, ensuring synchronized geometric changes for segmentation tasks.
 
-My preprocessing pipeline extends U-Net’s elastic deformation with additional augmentations and modern RGB handling (fixed 512×512 size, ImageNet normalization), suited for natural image tasks. U-Net, designed for biomedical images, uses simpler augmentation and lacks explicit normalization or tensor conversion.
+My preprocessing pipeline extends U-Net’s elastic deformation with additional augmentations and modern RGB handling (fixed 512×512 size, normalization), suited for natural image tasks. U-Net, designed for biomedical images, uses simpler augmentation and lacks explicit normalization or tensor conversion.
 
 Second, I consider the edges within the images as the foreground class for the segmentation task. Specifically, I process the annotations such that the edge regions—typically representing boundaries between objects and the background—are assigned to the foreground label (value 1). All other regions, including the interior of objects and the background, are treated as the background class (value 0). This binary classification approach focuses the model's attention on accurately delineating edge structures, which are critical for precise segmentation.
+
+In the final experiment of UNet, I find [this webste](https://yanwei-liu.medium.com/pytorch%E8%A8%88%E7%AE%97dataset%E7%9A%84mean%E5%92%8Cstd-ecadb63420ca) before I go into ResNet34+Unet. I calculate the mean and std of the dataset and use them to normalize the dataset instead of using the default mean and std in the albumentations library.
+
 
 ## 3. Analyze the experiment results (25%)
 
@@ -66,6 +69,8 @@ The light blue line is showing the performance of the one with learning rate 0.0
 After I adjust the learning rate to 0.0001, the model can reach the baseline (Dice score 0.8448) after 10 epochs. The model with learning rate 0.001 can not reach the baseline after 10 epochs.
 
 ![alt text](image-2.png)
+
+In the final experiment, I adjust the mean and std of the dataset to normalize the dataset. The idea is from [this webste](https://yanwei-liu.medium.com/pytorch%E8%A8%88%E7%AE%97dataset%E7%9A%84mean%E5%92%8Cstd-ecadb63420ca). The training loss and validation loss are shown in the following figure.
 
 #### Final hyperparameters
 
@@ -125,3 +130,4 @@ I find that learning rate for 0.001 and weight decay for 0.0002 is a good choice
 2. Unet https://arxiv.org/abs/1505.04597
 3. ResNet https://arxiv.org/abs/1512.03385
 4. Delving Deep into Rectifiers: Surpassing Human-Level Performance on ImageNet Classification https://arxiv.org/abs/1502.01852
+5. PyTorch計算dataset的mean和std https://yanwei-liu.medium.com/pytorch%E8%A8%88%E7%AE%97dataset%E7%9A%84mean%E5%92%8Cstd-ecadb63420ca

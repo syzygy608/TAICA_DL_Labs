@@ -161,3 +161,38 @@ def load_dataset(data_path, mode):
     
     dataset = OxfordPetDataset(data_path, mode=mode, transform=transform)
     return dataset
+
+def calculate_mean_and_std(data_path):
+    # implement the calculate mean and std function here
+    images_path = os.path.join(data_path, "images")
+    mean_r = 0
+    mean_g = 0
+    mean_b = 0
+    std_r = 0
+    std_g = 0
+    std_b = 0
+    total_pixels = 0
+    for filename in os.listdir(images_path):
+        image_path = os.path.join(images_path, filename)
+        image = cv2.imread(image_path)
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        total_pixels += np.prod(image.shape[:2])
+        mean_r += np.sum(image[:, :, 0])
+        mean_g += np.sum(image[:, :, 1])
+        mean_b += np.sum(image[:, :, 2])
+    mean_r /= len(os.listdir(images_path))
+    mean_g /= len(os.listdir(images_path))
+    mean_b /= len(os.listdir(images_path))
+    for filename in os.listdir(images_path):
+        image_path = os.path.join(images_path, filename)
+        image = cv2.imread(image_path)
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        std_r += np.sum((image[:, :, 0] - mean_r) ** 2)
+        std_g += np.sum((image[:, :, 1] - mean_g) ** 2)
+        std_b += np.sum((image[:, :, 2] - mean_b) ** 2)
+    std_r = np.sqrt(std_r / total_pixels)
+    std_g = np.sqrt(std_g / total_pixels)
+    std_b = np.sqrt(std_b / total_pixels)
+    means = [mean_r, mean_g, mean_b] / 255
+    stds = [std_r, std_g, std_b] / 255
+    return means, stds
