@@ -172,21 +172,22 @@ def calculate_mean_and_std(data_path):
     std_g = 0
     std_b = 0
     total_pixels = 0
+    images = []
     for filename in os.listdir(images_path):
         image_path = os.path.join(images_path, filename)
-        image = cv2.imread(image_path)
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        # 確認是否為圖片檔
+        if not image_path.endswith(".jpg"):
+            continue
+        image = np.array(Image.open(image_path).convert("RGB"))
+        images.append(image)
         total_pixels += np.prod(image.shape[:2])
         mean_r += np.sum(image[:, :, 0])
         mean_g += np.sum(image[:, :, 1])
         mean_b += np.sum(image[:, :, 2])
-    mean_r /= len(os.listdir(images_path))
-    mean_g /= len(os.listdir(images_path))
-    mean_b /= len(os.listdir(images_path))
-    for filename in os.listdir(images_path):
-        image_path = os.path.join(images_path, filename)
-        image = cv2.imread(image_path)
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    mean_r /= len(images)
+    mean_g /= len(images)
+    mean_b /= len(images)
+    for image in images:
         std_r += np.sum((image[:, :, 0] - mean_r) ** 2)
         std_g += np.sum((image[:, :, 1] - mean_g) ** 2)
         std_b += np.sum((image[:, :, 2] - mean_b) ** 2)
