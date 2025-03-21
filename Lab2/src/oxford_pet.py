@@ -165,15 +165,12 @@ def load_dataset(data_path, mode):
 def calculate_mean_and_std(data_path):
     # implement the calculate mean and std function here
     images_path = os.path.join(data_path, "images")
-    mean_r = 0
-    mean_g = 0
-    mean_b = 0
-    std_r = 0
-    std_g = 0
-    std_b = 0
+    means = np.zeros(3)
+    stds = np.zeros(3)
     total_pixels = 0
     images = []
-    for filename in os.listdir(images_path):
+    progess_bar = tqdm(os.listdir(images_path))
+    for filename in progess_bar:
         image_path = os.path.join(images_path, filename)
         # 確認是否為圖片檔
         if not image_path.endswith(".jpg"):
@@ -181,21 +178,14 @@ def calculate_mean_and_std(data_path):
         image = np.array(Image.open(image_path).convert("RGB"))
         images.append(image)
         total_pixels += np.prod(image.shape[:2])
-        mean_r += np.sum(image[:, :, 0])
-        mean_g += np.sum(image[:, :, 1])
-        mean_b += np.sum(image[:, :, 2])
-    mean_r /= len(images)
-    mean_g /= len(images)
-    mean_b /= len(images)
+        means += np.mean(image, axis=(0, 1))
+    means /= len(images) 
+    progess_bar.set_description("Calculating stds")
     for image in images:
-        std_r += np.sum((image[:, :, 0] - mean_r) ** 2)
-        std_g += np.sum((image[:, :, 1] - mean_g) ** 2)
-        std_b += np.sum((image[:, :, 2] - mean_b) ** 2)
-    std_r = np.sqrt(std_r / total_pixels)
-    std_g = np.sqrt(std_g / total_pixels)
-    std_b = np.sqrt(std_b / total_pixels)
-    means = [mean_r, mean_g, mean_b] / 255
-    stds = [std_r, std_g, std_b] / 255
+        stds += np.sum((image - means) ** 2, axis=(0, 1))
+    stds = np.sqrt(stds / total_pixels)
+    means = means / 255
+    stds = stds / 255
     return means, stds
 
 if __name__ == "__main__":
