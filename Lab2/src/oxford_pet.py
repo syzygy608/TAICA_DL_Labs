@@ -149,13 +149,13 @@ def load_dataset(data_path, mode):
                 rotate=(-30, 30),
                 p=0.5
             ),
-            A.Normalize(),
+            A.Normalize(mean=(0.481, 0.449, 0.396), std=(0.269, 0.265, 0.273)),
             ToTensorV2()
         ], additional_targets={"mask": "mask"})
     else:
         transform = A.Compose([
             A.Resize(512, 512),
-            A.Normalize(),
+            A.Normalize(mean=(0.481, 0.449, 0.396), std=(0.269, 0.265, 0.273)),
             ToTensorV2()
         ], additional_targets={"mask": "mask"})
     
