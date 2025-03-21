@@ -196,3 +196,8 @@ def calculate_mean_and_std(data_path):
     means = [mean_r, mean_g, mean_b] / 255
     stds = [std_r, std_g, std_b] / 255
     return means, stds
+
+if __name__ == "__main__":
+    data_path = "../dataset/oxford-iiit-pet"
+    means, stds = calculate_mean_and_std(data_path)
+    print(f"Means: {means}, Stds: {stds}")
