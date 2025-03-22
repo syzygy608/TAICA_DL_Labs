@@ -57,6 +57,7 @@ class UNetDecoder(nn.Module):
             self.ups.append(ConvBlock(feature_size * 2, feature_size))
 
         self.final_conv = nn.Sequential(
+            ConvBlock(feature_sizes[-1], feature_sizes[-1]),
             nn.Conv2d(feature_sizes[-1], out_channels, kernel_size=1),
             nn.Sigmoid()
         )
