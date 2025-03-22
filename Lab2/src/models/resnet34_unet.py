@@ -55,7 +55,10 @@ class UNetDecoder(nn.Module):
             self.ups.append(nn.ConvTranspose2d(feature_size * 2, feature_size, kernel_size=2, stride=2, padding=0))
             self.ups.append(ConvBlock(feature_size * 2, feature_size))
 
-        self.final_conv = nn.Conv2d(feature_sizes[-1], out_channels, kernel_size=1)
+        self.final_conv = nn.Sequential(
+            nn.Conv2d(feature_sizes[-1], out_channels, kernel_size=1),
+            nn.Sigmoid()
+        )
 
     def forward(self, x, skips):
         x = self.bottleneck(x)

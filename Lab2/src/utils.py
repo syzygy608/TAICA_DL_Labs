@@ -1,20 +1,6 @@
 import torch
 import numpy as np
 
-def binarization(pred_mask):
-    """
-    Binarize predicted mask.
-    
-    Args:
-        pred_mask (torch.Tensor): Predicted mask (binary or probabilities)
-    
-    Returns:
-        torch.Tensor: Binarized mask as a tensor
-    """
-    # > 0.5 為 True，否則為 False
-    pred_mask = (pred_mask > 0.5).float()
-    return pred_mask
-
 def dice_score(pred_mask, gt_mask):
     """
     Calculate Dice score between predicted mask and ground truth mask.
@@ -32,8 +18,6 @@ def dice_score(pred_mask, gt_mask):
     if not isinstance(gt_mask, torch.Tensor):
         gt_mask = torch.tensor(gt_mask, dtype=torch.float32)
 
-    # 確保輸入是二值化過的
-    pred_mask = binarization(pred_mask)
     assert pred_mask.max() <= 1 and pred_mask.min() >= 0, "pred_mask out of range"
     assert gt_mask.max() <= 1 and gt_mask.min() >= 0, "gt_mask out of range"
     
