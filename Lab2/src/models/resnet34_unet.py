@@ -47,10 +47,10 @@ class UNetDecoder(nn.Module):
         
         # same as UNet upsample path
         self.bottleneck = nn.Sequential(
-            ResidualBlock(feature_sizes[0], feature_sizes[0] * 2),
+            ResidualBlock(feature_sizes[0], feature_sizes[0] * 2, True),
             nn.Dropout2d(p=dropout),
         )
-        
+
         self.ups = nn.ModuleList()
         for feature_size in feature_sizes:
             self.ups.append(nn.ConvTranspose2d(feature_size * 2, feature_size, kernel_size=2, stride=2))
