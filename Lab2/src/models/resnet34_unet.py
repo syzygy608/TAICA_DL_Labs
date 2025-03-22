@@ -52,7 +52,7 @@ class UNetDecoder(nn.Module):
         )
         self.ups = nn.ModuleList()
         for feature_size in feature_sizes:
-            self.ups.append(nn.ConvTranspose2d(feature_size * 2, feature_size, kernel_size=2, stride=2, padding=0))
+            self.ups.append(nn.ConvTranspose2d(feature_size * 2, feature_size, kernel_size=2, stride=2))
             self.ups.append(ConvBlock(feature_size * 2, feature_size))
 
         self.final_conv = nn.Sequential(
@@ -66,6 +66,8 @@ class UNetDecoder(nn.Module):
         for i in range(0, len(self.ups), 2):
             x = self.ups[i](x)
             skip = skips[i // 2] # 透過 // 2 取得對應的 skip connection
+            print(x.shape, skip.shape)
+            
             x = torch.cat([x, skip], dim=1) # 進行 skip connection
             x = self.ups[i + 1](x) # 進行 convolution
         return self.final_conv(x) # 輸出預測結果
