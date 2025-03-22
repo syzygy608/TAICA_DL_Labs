@@ -26,7 +26,7 @@ class ResNetEncoder(nn.Module):
 
        
     def _make_layer(self, block, in_channels, out_channels, counts):
-        layer = [block(in_channels, out_channels, downsample=True)]
+        layer = [block(in_channels, out_channels, downsample=True if in_channels != out_channels else None)]
         for _ in range(1, counts):
             layer.append(block(out_channels, out_channels))
         return nn.Sequential(*layer)
@@ -47,6 +47,7 @@ class UNetDecoder(nn.Module):
         
         # same as UNet upsample path
         self.bottleneck = nn.Sequential(
+            nn.ConvTranspose2d(feature_size * 2, feature_size, kernel_size=2, stride=2, padding=0),
             ConvBlock(feature_sizes[0], feature_sizes[0] * 2),
             nn.Dropout2d(p=dropout),
         )
