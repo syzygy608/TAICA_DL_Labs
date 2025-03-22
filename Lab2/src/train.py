@@ -61,12 +61,12 @@ def train(args):
                 train_score.append(score.item())
             progress_bar.set_description(f'Epoch {epoch+1}/{args.epochs}, Loss: {np.mean(train_loss):.4f}, Dice Score: {np.mean(train_score):.4f}')
 
-            writer.add_scalar('Loss/train', np.mean(train_loss), epoch)
-            writer.add_scalar('Dice/train', np.mean(train_score), epoch)
+            writer.add_scalar('Loss/train', np.mean(train_loss), epoch + 1)
+            writer.add_scalar('Dice/train', np.mean(train_score), epoch + 1)
 
         validation_loss, validation_score = evaluate(model, val_data_loader, device)
-        writer.add_scalar('Loss/val', validation_loss, epoch)
-        writer.add_scalar('Dice/val', validation_score, epoch)
+        writer.add_scalar('Loss/valid', validation_loss, epoch + 1)
+        writer.add_scalar('Dice/valid', validation_score, epoch + 1)
         if validation_score > best_score: # 如果驗證集的分數比最佳分數還要高
             best_score = validation_score
             torch.save(model.state_dict(), best_model_path) # 儲存模型權重
