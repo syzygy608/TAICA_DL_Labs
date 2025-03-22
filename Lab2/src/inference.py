@@ -3,12 +3,15 @@ import torch
 from oxford_pet import load_dataset
 import numpy as np
 from models.unet import UNet
+from models.resnet34_unet import ResNet34UNet
 from utils import dice_score
 import tqdm
 
 def inference(args):
     if args.model == "unet":
         model = UNet(in_channels=3, out_channels=1)
+    else:
+        model = ResNet34UNet(in_channels=3, out_channels=1)
     
     state_dict = torch.load("../saved_models/" + args.model + '_best_model.pth', weights_only=True)
     model.load_state_dict(state_dict)  # 將參數載入模型
