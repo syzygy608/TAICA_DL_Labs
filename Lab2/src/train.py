@@ -3,7 +3,7 @@ from oxford_pet import load_dataset
 from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
 from models.unet import UNet
-# from models.resnet_unet import ResNetUNet
+from models.resnet34_unet import ResNet34UNet
 import tqdm
 from utils import dice_score, dice_loss
 from evaluate import evaluate
@@ -24,7 +24,7 @@ def train(args):
     if args.model == 'unet':
         model = UNet(in_channels=3, out_channels=1).to(device)
     elif args.model == 'resnet':
-        model = ResNetUNet(in_channels=3, out_channels=1).to(device)
+        model = ResNet34UNet(in_channels=3, out_channels=1).to(device)
     
     # 優化器新增 L2 正則化項
     optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate, weight_decay=args.weight_decay)
