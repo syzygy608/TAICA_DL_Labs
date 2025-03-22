@@ -5,7 +5,7 @@ from torch.utils.tensorboard import SummaryWriter
 from models.unet import UNet
 from models.resnet34_unet import ResNet34UNet
 import tqdm
-from utils import dice_score, dice_loss, binarization
+from utils import dice_score, dice_loss
 from evaluate import evaluate
 import torch
 import numpy as np
