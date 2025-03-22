@@ -76,10 +76,22 @@ class ResNet34UNet(nn.Module):
         super(ResNet34UNet, self).__init__()
         self.encoder = ResNetEncoder(in_channels=in_channels)
         self.decoder = UNetDecoder(out_channels=out_channels)
+        self._initialize_weights()
 
     def forward(self, x):
         x, skips = self.encoder(x)
         return self.decoder(x, skips)
+    
+    def _initialize_weights(self):
+        for module in self.modules():
+            if isinstance(module, nn.Conv2d):
+                # 使用 Kaiming initialization
+                nn.init.kaiming_normal_(module.weight, mode='fan_out', nonlinearity='relu')
+                if module.bias is not None: 
+                    nn.init.constant_(module.bias, 0)
+            elif isinstance(module, nn.BatchNorm2d):
+                nn.init.constant_(module.weight, 1)
+                nn.init.constant_(module.bias, 0)
 
 if __name__ == '__main__':
     model = ResNet34UNet()
