@@ -50,7 +50,9 @@ def train(args):
             writer.add_images('masks/true', masks, i)
 
             predictions = model(images) # 取得模型預測結果
-            writer.add_images('masks/pred', predictions, i)
+            temp = predictions
+            temp = (temp > 0.5).float() # 將預測結果轉為二值化
+            writer.add_images('masks/pred_binary', temp, i)
             loss = criterion(predictions, masks) + (dice_loss(predictions, masks)) # 計算損失值
             train_loss.append(loss.item()) # 將損失值加入 train_loss 中
             optimizer.zero_grad() # 梯度歸零
